@@ -1,0 +1,24 @@
+configurations {
+   css {
+      // define a configuration that, when resolved, will look in
+      // the producer for a publication that exposes CSS resources
+      attributes {
+         attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage, 'css-resources'))
+      }
+      canBeResolved = true
+      canBeConsumed = false
+   }
+}
+
+dependencies {
+   // no need for explicit configuration here, variant-aware management will choose the right one
+   css project(':producer')
+}
+
+// a sample task that will zip the CSS resources
+task cssJar(type: Jar) {
+   baseName = 'css'
+   destinationDir = file("$buildDir/libs")
+   from configurations.css
+   include 'base.css' // filter the resources
+}

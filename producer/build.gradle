@@ -1,0 +1,32 @@
+// This plugin is applied so that we can show
+// that it works even if other "publications" are created
+apply plugin: 'java-library'
+
+configurations {
+   cssElements {
+      // define an outgoing configuration, aimed at consumers looking
+      // for CSS resources
+      attributes {
+         attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage, 'css-resources'))
+      }
+      canBeResolved = false
+      canBeConsumed = true
+   }
+}
+
+// This task generates some CSS files
+task createResources {
+    outputs.dir("$buildDir/css")
+
+    doLast {
+        file("$buildDir/css/base.css") << '# first'
+        file("$buildDir/css/other.css") << '# other'
+    }
+}
+
+artifacts {
+   // declare that the generated css directory is an output of cssElements
+   cssElements file: file("$buildDir/css"), builtBy: createResources
+}
+
+
